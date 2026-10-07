@@ -38,63 +38,67 @@ class DialogueWidget(QWidget):
                 font-weight: bold;
                 padding: 4px 2px;
             }
-            QPushButton.actionBtn {
+            QPushButton.actionBtn, QPushButton[class="actionBtn"] {
                 background-color: rgba(55, 48, 42, 210);
                 color: #ffffff;
                 border: 1px solid #8e6c32;
                 border-radius: 8px;
-                padding: 8px 12px;
-                min-height: 36px;
+                padding: 7px 12px;
+                margin: 3px 0px;
+                min-height: 34px;
                 font-size: 13px;
                 text-align: left;
             }
-            QPushButton.actionBtn:hover {
+            QPushButton.actionBtn:hover, QPushButton[class="actionBtn"]:hover {
                 background-color: #d4af37;
                 color: #1a1a1a;
                 font-weight: bold;
             }
-            QPushButton.addBtn {
+            QPushButton.addBtn, QPushButton[class="addBtn"] {
                 background-color: rgba(35, 60, 42, 220);
                 color: #bbf7d0;
                 border: 1px solid #4ade80;
                 border-radius: 8px;
-                padding: 8px 12px;
-                min-height: 36px;
+                padding: 7px 12px;
+                margin: 3px 0px;
+                min-height: 34px;
                 font-size: 13px;
                 text-align: left;
                 font-weight: bold;
             }
-            QPushButton.addBtn:hover {
+            QPushButton.addBtn:hover, QPushButton[class="addBtn"]:hover {
                 background-color: #22c55e;
                 color: #052e16;
             }
-            QPushButton.pomodoroBtn {
+            QPushButton.pomodoroBtn, QPushButton[class="pomodoroBtn"] {
                 background-color: rgba(85, 35, 30, 220);
                 color: #fecaca;
                 border: 1px solid #f87171;
                 border-radius: 8px;
-                padding: 8px 12px;
-                min-height: 36px;
+                padding: 7px 12px;
+                margin: 3px 0px;
+                min-height: 34px;
                 font-size: 13px;
                 text-align: left;
                 font-weight: 500;
             }
-            QPushButton.pomodoroBtn:hover {
+            QPushButton.pomodoroBtn:hover, QPushButton[class="pomodoroBtn"]:hover {
                 background-color: #dc2626;
                 color: #ffffff;
                 font-weight: bold;
             }
-            QPushButton.dismissBtn {
+            QPushButton.dismissBtn, QPushButton[class="dismissBtn"] {
                 background-color: rgba(45, 45, 50, 180);
                 color: #9ca3af;
                 border: 1px dashed #6b7280;
                 border-radius: 8px;
-                padding: 8px 12px;
-                min-height: 32px;
+                padding: 7px 12px;
+                margin: 3px 0px;
+                min-height: 30px;
                 font-size: 12px;
                 text-align: center;
             }
-            QPushButton.dismissBtn:hover {
+            QPushButton.dismissBtn:hover, QPushButton[class="dismissBtn"]:hover {
                 background-color: #4b5563;
                 color: #ffffff;
             }

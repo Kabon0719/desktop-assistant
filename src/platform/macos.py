@@ -155,6 +155,8 @@ class MacOSPlatform(PlatformAdapter):
             ns_view = objc.objc_object(c_void_p=ns_view_ptr)
             ns_window = ns_view.window()
             if ns_window:
+                # 停用 macOS 系統為無邊框視窗自動附加的方形模糊殘影
+                ns_window.setHasShadow_(False)
                 # NSWindowCollectionBehaviorCanJoinAllSpaces = 1 << 0
                 # NSWindowCollectionBehaviorStationary = 1 << 4
                 ns_window.setCollectionBehavior_((1 << 0) | (1 << 4))
