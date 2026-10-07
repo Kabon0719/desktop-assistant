@@ -1,4 +1,5 @@
 import os
+import sys
 from PyQt6.QtWidgets import QWidget, QMenu, QApplication, QToolTip
 from PyQt6.QtCore import Qt, QPoint, QRect, QPropertyAnimation, QEasingCurve, pyqtSlot, QTimer
 from PyQt6.QtGui import QPainter, QPixmap, QMouseEvent, QPaintEvent, QCursor, QAction, QWheelEvent
