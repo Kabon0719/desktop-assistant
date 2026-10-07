@@ -53,10 +53,11 @@ class MacOSPlatform(PlatformAdapter):
             with open(self._plist_path, "w", encoding="utf-8") as f:
                 f.write(plist_content)
 
-            # 嘗試通知 launchctl 載入
+            # 注意：若呼叫 launchctl load 且 plist 設有 RunAtLoad=true，系統會「立刻」啟動一個新行程！
+            # 因此這裡只要確保寫入 plist 即可，等到使用者下一次開機/登入時 launchd 自然會讀取並啟動。
             try:
+                # 若之前載入過先 unload，確保下一次開機能吃到最新設定
                 subprocess.run(["launchctl", "unload", self._plist_path], capture_output=True)
-                subprocess.run(["launchctl", "load", self._plist_path], capture_output=True)
             except Exception:
                 pass
 

@@ -39,6 +39,22 @@ def main():
         Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
     )
 
+    # 單一實例守護 (防止重複啟動多個桌面助手)
+    from PyQt6.QtNetwork import QLocalServer, QLocalSocket
+    server_name = "DesktopAssistant_SingleInstance_Lock"
+    socket = QLocalSocket()
+    socket.connectToServer(server_name)
+    if socket.waitForConnected(500):
+        # 已經有實例在運行中，直接退出
+        print("[App] 偵測到已有桌面助手正在運行中，自動略過重複啟動。")
+        sys.exit(0)
+    socket.close()
+
+    local_server = QLocalServer()
+    # 移除殘留的舊 socket 檔案 (特別是 macOS / Linux /tmp/ 底下的 socket)
+    QLocalServer.removeServer(server_name)
+    local_server.listen(server_name)
+
     app = QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
 
