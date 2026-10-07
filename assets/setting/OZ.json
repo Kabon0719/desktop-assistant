@@ -1,0 +1,42 @@
+{
+  "version": "1.0",
+  "export_type": "desktop_assistant_settings",
+  "language": "zh",
+  "dialogue_prompt": "需要幫忙嗎？",
+  "animation_groups": {
+    "idle": [
+      "OZ_read",
+      "OZ_switch"
+    ],
+    "asking": [
+      "OZ_breath"
+    ],
+    "executing": [
+      "OZ_punch"
+    ]
+  },
+  "pomodoro": {
+    "duration_minutes": 120,
+    "sound_file": "",
+    "alarm_message": "時間到囉，該是起來動動了！"
+  },
+  "window": {
+    "idle_size": [
+      360,
+      360
+    ],
+    "focus_size": [
+      530,
+      530
+    ],
+    "fps": 30,
+    "stay_on_top": true
+  },
+  "behavior": {
+    "scale_in_place": true,
+    "idle_switch_interval_sec": 20,
+    "asking_switch_interval_sec": 15,
+    "approach_duration_ms": 450,
+    "return_duration_ms": 450
+  }
+}

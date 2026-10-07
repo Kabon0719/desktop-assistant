@@ -1,0 +1,44 @@
+{
+  "window": {
+    "idle_size": [
+      380,
+      380
+    ],
+    "focus_size": [
+      680,
+      680
+    ],
+    "fps": 30,
+    "stay_on_top": true,
+    "saved_position": [
+      3065,
+      425
+    ]
+  },
+  "behavior": {
+    "scale_in_place": true,
+    "idle_switch_interval_sec": 20,
+    "asking_switch_interval_sec": 15,
+    "approach_duration_ms": 450,
+    "return_duration_ms": 450
+  },
+  "pomodoro": {
+    "duration_minutes": 120,
+    "sound_file": "",
+    "alarm_message": "主人！該起來動動了！"
+  },
+  "animation_groups": {
+    "idle": [
+      "76_run",
+      "76_train",
+      "76_kick"
+    ],
+    "asking": [
+      "76_wait"
+    ],
+    "executing": [
+      "76_cum"
+    ]
+  },
+  "language": "zh"
+}

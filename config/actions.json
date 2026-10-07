@@ -1,0 +1,78 @@
+{
+  "dialogue_prompt": "狗奴柒陸隨時待命！",
+  "actions": [
+    {
+      "id": "pomodoro",
+      "label": "🍅 開始番茄鐘 (120分鐘)",
+      "action_type": "pomodoro",
+      "target": null,
+      "trigger_animation": "act_punch"
+    },
+    {
+      "id": "task_1791045170",
+      "label": "🎨 我要發布新作品！",
+      "action_type": "executable",
+      "target": "D:/code/tools/publish_assistant/啟動發布助理.bat",
+      "trigger_animation": "act_punch"
+    },
+    {
+      "id": "task_1791045528",
+      "label": "🔗 我要生QR code！",
+      "action_type": "executable",
+      "target": "D:/code/tools/qrcode_generator/run.bat",
+      "trigger_animation": "act_punch"
+    },
+    {
+      "id": "task_1791045910",
+      "label": "🎁 我要抽推特點圖！",
+      "action_type": "executable",
+      "target": "D:/code/tools/x_lottery_tool/run.bat",
+      "trigger_animation": "act_punch"
+    },
+    {
+      "id": "task_1791049214",
+      "label": "📹 我要開直播了！",
+      "action_type": "executable",
+      "targets": [
+        "C:\\Users\\Kabon\\AppData\\Local\\Programs\\moz-3-anime-studio\\MOZ-3 Anime Studio.exe",
+        "D:\\Program Files\\obs-studio\\bin\\64bit\\obs64.exe"
+      ],
+      "target": "C:\\Users\\Kabon\\AppData\\Local\\Programs\\moz-3-anime-studio\\MOZ-3 Anime Studio.exe",
+      "trigger_animation": "random"
+    },
+    {
+      "id": "task_1791081761",
+      "label": "🔻 我要下載網路影片！",
+      "action_type": "executable",
+      "targets": [
+        "D:\\code\\tools\\x_threads_downloader\\run.bat"
+      ],
+      "target": "D:\\code\\tools\\x_threads_downloader\\run.bat",
+      "trigger_animation": "random"
+    },
+    {
+      "id": "task_1791280084",
+      "label": "角色扮演！",
+      "action_type": "executable",
+      "targets": [
+        "D:\\code\\tools\\OllamaNovelStudio\\start.bat"
+      ],
+      "target": "D:\\code\\tools\\OllamaNovelStudio\\start.bat",
+      "trigger_animation": "random"
+    },
+    {
+      "id": "add_task",
+      "label": "📜 我有新工作要給你辦",
+      "action_type": "add_task",
+      "target": null,
+      "trigger_animation": null
+    },
+    {
+      "id": "dismiss",
+      "label": "🍃 目前沒什麼事情要你做",
+      "action_type": "dismiss",
+      "target": null,
+      "trigger_animation": null
+    }
+  ]
+}
