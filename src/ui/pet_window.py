@@ -55,6 +55,7 @@ class PetWindow(QWidget):
         self.dialogue = DialogueWidget()
         self.dialogue.action_clicked.connect(self._handle_action_selected)
         self.dialogue.action_deleted.connect(self._handle_action_deleted)
+        self._prewarm_dialogue()
 
         # Pomodoro timer
         self.pomodoro = PomodoroTimer(base_dir)
@@ -400,6 +401,7 @@ class PetWindow(QWidget):
 
             # 重新整理對話框選單
             screen = self._get_current_screen_geometry()
+            self.dialogue.invalidate_cache()
             self.dialogue.set_content(
                 self.actions_data.get("dialogue_prompt", I18n.t("default_dialogue_prompt")),
                 self.actions_data.get("actions", [])
@@ -416,6 +418,7 @@ class PetWindow(QWidget):
 
         # 重新整理對話框選單
         screen = self._get_current_screen_geometry()
+        self.dialogue.invalidate_cache()
         self.dialogue.set_content(
             self.actions_data.get("dialogue_prompt", I18n.t("default_dialogue_prompt")),
             self.actions_data.get("actions", [])
@@ -659,6 +662,7 @@ class PetWindow(QWidget):
             fw, fh = self.focus_size
             self.setGeometry(cur.center().x() - fw // 2, cur.bottom() - fh + 1, fw, fh)
             if self.dialogue.isVisible():
+                self.dialogue.invalidate_cache()
                 self.dialogue.set_content(
                     self.actions_data.get("dialogue_prompt", I18n.t("default_dialogue_prompt")),
                     self.actions_data.get("actions", [])
@@ -681,6 +685,22 @@ class PetWindow(QWidget):
         self.sprite_player.clear_cache(keep_anims=list(needed_anims))
         # 批量預載所有需要的動畫
         self.sprite_player.preload_animations(list(needed_anims))
+
+    def _prewarm_dialogue(self):
+        """預熱工作選單視窗，提前建立原生視窗句柄與繪製快取，徹底消除首次呼叫時的卡頓"""
+        self.dialogue.set_content(
+            self.actions_data.get("dialogue_prompt", I18n.t("default_dialogue_prompt")),
+            self.actions_data.get("actions", [])
+        )
+        try:
+            self.dialogue.winId()  # 強制生成系統原生視窗 handle
+            self.dialogue.setWindowOpacity(0.0)
+            self.dialogue.show()
+            QApplication.processEvents()
+            self.dialogue.hide()
+            self.dialogue.setWindowOpacity(1.0)
+        except Exception as e:
+            print(f"[PetWindow] Dialogue prewarm note: {e}")
 
     def _open_settings_dialog(self):
         from src.ui.settings_dialog import SettingsDialog

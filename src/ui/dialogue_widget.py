@@ -155,9 +155,18 @@ class DialogueWidget(QWidget):
         btn.clicked.connect(lambda checked=False, a=act: self.action_clicked.emit(a))
         return btn
 
+    def invalidate_cache(self):
+        self._content_cache_key = None
+
     def set_content(self, prompt: str, actions: List[Dict]):
         if prompt in ("師主有何吩咐？", "主人有何吩咐？", "How may I help you?"):
             prompt = I18n.t("default_dialogue_prompt")
+
+        cache_key = (prompt, tuple(str(a) for a in actions), I18n.get_language())
+        if getattr(self, "_content_cache_key", None) == cache_key:
+            return
+        self._content_cache_key = cache_key
+
         self.prompt_label.setText(prompt)
 
         # Clear existing buttons in grid
