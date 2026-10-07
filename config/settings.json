@@ -11,7 +11,7 @@
     "fps": 30,
     "stay_on_top": true,
     "saved_position": [
-      3027,
+      3026,
       425
     ]
   },
@@ -25,7 +25,7 @@
   "pomodoro": {
     "duration_minutes": 120,
     "sound_file": "",
-    "alarm_message": "主人！該起來動動了！"
+    "alarm_message": "時間到囉，該是起來動動了！"
   },
   "animation_groups": {
     "idle": [
