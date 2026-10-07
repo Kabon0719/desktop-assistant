@@ -20,7 +20,7 @@ class DialogueWidget(QWidget):
             flags |= Qt.WindowType.SubWindow
         self.setWindowFlags(flags)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        self.setFixedWidth(310)
+        self.setFixedWidth(340)
 
         # Main container with styling
         self.container = QFrame(self)
@@ -43,7 +43,8 @@ class DialogueWidget(QWidget):
                 color: #ffffff;
                 border: 1px solid #8e6c32;
                 border-radius: 8px;
-                padding: 7px 12px;
+                padding: 8px 12px;
+                min-height: 36px;
                 font-size: 13px;
                 text-align: left;
             }
@@ -57,7 +58,8 @@ class DialogueWidget(QWidget):
                 color: #bbf7d0;
                 border: 1px solid #4ade80;
                 border-radius: 8px;
-                padding: 7px 12px;
+                padding: 8px 12px;
+                min-height: 36px;
                 font-size: 13px;
                 text-align: left;
                 font-weight: bold;
@@ -71,7 +73,8 @@ class DialogueWidget(QWidget):
                 color: #fecaca;
                 border: 1px solid #f87171;
                 border-radius: 8px;
-                padding: 7px 12px;
+                padding: 8px 12px;
+                min-height: 36px;
                 font-size: 13px;
                 text-align: left;
                 font-weight: 500;
@@ -86,7 +89,8 @@ class DialogueWidget(QWidget):
                 color: #9ca3af;
                 border: 1px dashed #6b7280;
                 border-radius: 8px;
-                padding: 6px 12px;
+                padding: 8px 12px;
+                min-height: 32px;
                 font-size: 12px;
                 text-align: center;
             }
@@ -119,7 +123,7 @@ class DialogueWidget(QWidget):
 
         # Grid Layout for action buttons (no scrollbar, dynamic sizing)
         self.grid_layout = QGridLayout()
-        self.grid_layout.setSpacing(8)
+        self.grid_layout.setSpacing(10)
         self.grid_layout.setContentsMargins(0, 0, 0, 0)
         self.box_layout.addLayout(self.grid_layout)
 

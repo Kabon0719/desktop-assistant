@@ -188,8 +188,12 @@ class PetWindow(QWidget):
         self.update()
 
     def paintEvent(self, event: QPaintEvent):
+        painter = QPainter(self)
+        painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_Clear)
+        painter.eraseRect(self.rect())
+        painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_SourceOver)
+
         if not self.current_pixmap.isNull():
-            painter = QPainter(self)
             painter.setRenderHint(QPainter.RenderHint.Antialiasing)
             painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
             scaled = self.current_pixmap.scaled(
