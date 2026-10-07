@@ -1,6 +1,5 @@
 import os
 import shutil
-import winsound
 from typing import List, Optional
 from PyQt6.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton,
@@ -9,6 +8,7 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtCore import Qt
 from src.utils.i18n import I18n
+from src.platform import play_sound, play_beep
 
 class SettingsDialog(QDialog):
     def __init__(
@@ -440,12 +440,11 @@ class SettingsDialog(QDialog):
             path = self.default_sound
 
         if path and os.path.exists(path):
-            try:
-                winsound.PlaySound(path, winsound.SND_FILENAME | winsound.SND_ASYNC)
-            except Exception as e:
-                QMessageBox.warning(self, "播放失敗", f"無法播放音效: {e}")
+            success = play_sound(path, parent=self)
+            if not success:
+                QMessageBox.warning(self, "播放失敗", "無法播放音效檔案。")
         else:
-            winsound.MessageBeep(winsound.MB_ICONEXCLAMATION)
+            play_beep()
 
     def _on_save(self):
         prompt = self.prompt_edit.text().strip()

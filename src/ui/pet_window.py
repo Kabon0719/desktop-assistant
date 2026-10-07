@@ -11,6 +11,7 @@ from src.ui.dialogue_widget import DialogueWidget
 from src.utils.config_loader import ConfigLoader
 from src.utils.i18n import I18n
 from src.utils.topmost import force_topmost
+from src.platform import is_zoom_modifier, setup_app_window
 
 class PetWindow(QWidget):
     def __init__(self, base_dir: str):
@@ -34,6 +35,7 @@ class PetWindow(QWidget):
             flags |= Qt.WindowType.WindowStaysOnTopHint
         self.setWindowFlags(flags)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        setup_app_window(self)
         self.setWindowTitle(I18n.t("app_name"))
         self.setToolTip(I18n.t("tooltip_idle"))
 
@@ -462,8 +464,8 @@ class PetWindow(QWidget):
 
             event.accept()
     def wheelEvent(self, event: QWheelEvent):
-        """Ctrl + 滾輪縮放當前角色尺寸 (小圖/大圖分別調整並持久化保存)"""
-        if event.modifiers() & Qt.KeyboardModifier.ControlModifier:
+        """縮放當前角色尺寸 (Ctrl/⌘ + 滾輪，小圖/大圖分別調整並持久化保存)"""
+        if is_zoom_modifier(event.modifiers()):
             # 動畫運行中暫不響應縮放
             if self.geom_anim.state() == QPropertyAnimation.State.Running:
                 event.accept()

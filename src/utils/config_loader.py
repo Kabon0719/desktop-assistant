@@ -1,10 +1,11 @@
 import json
 import os
+from src.platform import get_config_dir
 
 class ConfigLoader:
     def __init__(self, base_dir: str):
         self.base_dir = base_dir
-        self.config_dir = os.path.join(base_dir, "config")
+        self.config_dir = get_config_dir(base_dir)
         self.actions_file = os.path.join(self.config_dir, "actions.json")
         self.settings_file = os.path.join(self.config_dir, "settings.json")
         
@@ -19,6 +20,7 @@ class ConfigLoader:
 
     def save_actions(self, actions_data: dict) -> bool:
         try:
+            os.makedirs(self.config_dir, exist_ok=True)
             with open(self.actions_file, "w", encoding="utf-8") as f:
                 json.dump(actions_data, f, ensure_ascii=False, indent=2)
             return True
@@ -37,6 +39,7 @@ class ConfigLoader:
 
     def save_settings(self, settings_data: dict) -> bool:
         try:
+            os.makedirs(self.config_dir, exist_ok=True)
             with open(self.settings_file, "w", encoding="utf-8") as f:
                 json.dump(settings_data, f, ensure_ascii=False, indent=2)
             return True

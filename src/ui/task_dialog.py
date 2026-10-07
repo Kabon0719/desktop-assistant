@@ -7,6 +7,7 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtCore import Qt
 from src.utils.i18n import I18n
+from src.platform import get_file_dialog_filter
 
 class AddTaskDialog(QDialog):
     def __init__(self, available_exec_anims: List[str] = None, parent=None):
@@ -213,7 +214,7 @@ class AddTaskDialog(QDialog):
             self,
             "選擇一個或多個應用程式/捷徑/腳本",
             "",
-            "所有支援格式 (*.exe *.bat *.cmd *.lnk *.url);;可執行檔 (*.exe);;所有檔案 (*.*)"
+            get_file_dialog_filter()
         )
         if file_paths:
             existing = set(self.get_targets())

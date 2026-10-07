@@ -1,8 +1,7 @@
 import os
-import sys
-import winsound
 from typing import Optional
-from PyQt6.QtCore import QObject, QTimer, pyqtSignal, QUrl
+from PyQt6.QtCore import QObject, QTimer, pyqtSignal
+from src.platform import play_sound, play_beep
 
 class PomodoroTimer(QObject):
     started = pyqtSignal(int)          # duration in minutes
@@ -73,24 +72,9 @@ class PomodoroTimer(QObject):
             target = self.default_sound
 
         if target and os.path.exists(target):
-            try:
-                if target.lower().endswith(".wav"):
-                    winsound.PlaySound(target, winsound.SND_FILENAME | winsound.SND_ASYNC)
-                else:
-                    # 對於 mp3 或其他格式，使用 QtMultimedia
-                    from PyQt6.QtMultimedia import QSoundEffect
-                    effect = QSoundEffect(self)
-                    effect.setSource(QUrl.fromLocalFile(os.path.abspath(target)))
-                    effect.setVolume(1.0)
-                    effect.play()
-            except Exception as e:
-                print(f"[Pomodoro] 播放音效失敗 ({e})，使用系統蜂鳴器")
-                try:
-                    winsound.MessageBeep(winsound.MB_ICONEXCLAMATION)
-                except Exception:
-                    pass
+            success = play_sound(target, parent=self)
+            if not success:
+                print("[Pomodoro] 播放音效失敗，改用系統提示音")
+                play_beep()
         else:
-            try:
-                winsound.MessageBeep(winsound.MB_ICONEXCLAMATION)
-            except Exception:
-                pass
+            play_beep()
