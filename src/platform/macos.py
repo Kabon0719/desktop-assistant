@@ -140,6 +140,20 @@ class MacOSPlatform(PlatformAdapter):
     def force_topmost(self, widget) -> None:
         if widget is None or not widget.isVisible():
             return
+        # macOS 上直接使用 widget.raise_() 可能會喚起整個 App 成為 Active/Key，造成使用者當前正在打字或操作的軟體失去 Focus。
+        # 透過 PyObjC 使用 orderFrontRegardless: (僅提至圖層前方，絕對不搶 Focus)
+        try:
+            import objc
+            from ctypes import c_void_p
+            ns_view_ptr = int(widget.winId())
+            if ns_view_ptr:
+                ns_view = objc.objc_object(c_void_p=c_void_p(ns_view_ptr))
+                ns_window = ns_view.window()
+                if ns_window:
+                    ns_window.orderFrontRegardless()
+                    return
+        except Exception:
+            pass
         widget.raise_()
 
     def setup_app_window(self, widget) -> None:
@@ -157,9 +171,14 @@ class MacOSPlatform(PlatformAdapter):
                 if ns_window:
                     ns_window.setHasShadow_(False)
                     ns_window.invalidateShadow()
-                    ns_window.setCollectionBehavior_((1 << 0) | (1 << 4))
-                    ns_window.setLevel_(3)
-                    print("[MacOSPlatform] 已透過 PyObjC 關閉 macOS 系統原生視窗陰影 (setHasShadow: NO)")
+                    # 避免搶佔焦點：canBecomeKeyWindow / canBecomeMainWindow
+                    # 8 = NSFloatingWindowLevel (維持在一般視窗上方浮動)
+                    ns_window.setLevel_(8)
+                    # NSWindowCollectionBehaviorCanJoinAllSpaces (1 << 0) | NSWindowCollectionBehaviorStationary (1 << 4)
+                    # | NSWindowCollectionBehaviorIgnoresCycle (1 << 6) -> 避免 Command+Tab 或視窗輪巡切換切到它
+                    behavior = (1 << 0) | (1 << 4) | (1 << 6)
+                    ns_window.setCollectionBehavior_(behavior)
+                    print("[MacOSPlatform] 已透過 PyObjC 配置無焦點背景懸浮與穿透 (Non-activating Topmost)")
         except Exception:
             pass
 

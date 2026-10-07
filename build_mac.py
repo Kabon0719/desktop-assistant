@@ -57,9 +57,32 @@ def build_mac():
         if not os.path.exists(target_config):
             shutil.copytree(os.path.join(BASE_DIR, "config"), target_config)
 
+    # 5. 清理 PyInstaller 留下來的多餘散裝目錄 (只保留純淨的 .app)
+    unneeded_dir = os.path.join(dist_dir, app_name)
+    if os.path.isdir(unneeded_dir):
+        try:
+            shutil.rmtree(unneeded_dir)
+            print(f"[Build Mac] 已自動清理多餘的散裝中間目錄: {unneeded_dir}")
+        except Exception as e:
+            print(f"[Build Mac] 清理散裝目錄提示: {e}")
+
+    # 6. 自動清除隔離屬性並封裝為分享用 ZIP (透過 macOS 原生 ditto 指令保證權限與符號連結完整)
+    zip_output = os.path.join(dist_dir, f"{app_name}_macOS.zip")
+    if sys.platform == "darwin":
+        import subprocess
+        try:
+            subprocess.run(["xattr", "-cr", app_bundle], check=False)
+            subprocess.run(["ditto", "-c", "-k", "--sequesterRsrc", "--keepParent", app_bundle, zip_output], check=False)
+            if os.path.exists(zip_output):
+                print(f"[Build Mac] 已自動生成可直接分享的 ZIP 壓縮檔: {zip_output}")
+        except Exception as e:
+            print(f"[Build Mac] 生成 ZIP 提示: {e}")
+
     print("=" * 60)
     print("[Build Mac] macOS 打包完成！")
     print(f"[Build Mac] 應用程式路徑: {app_bundle}")
+    if os.path.exists(zip_output):
+        print(f"[Build Mac] 分享用壓縮檔: {zip_output}")
     print("=" * 60)
 
 if __name__ == "__main__":

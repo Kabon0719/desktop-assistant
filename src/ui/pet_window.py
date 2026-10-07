@@ -36,6 +36,7 @@ class PetWindow(QWidget):
             flags |= Qt.WindowType.SubWindow
         else:
             flags |= Qt.WindowType.NoDropShadowWindowHint
+            flags |= Qt.WindowType.WindowDoesNotAcceptFocus
             
         if stay_on_top:
             flags |= Qt.WindowType.WindowStaysOnTopHint
