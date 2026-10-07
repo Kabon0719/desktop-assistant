@@ -7,14 +7,22 @@ from PyQt6.QtGui import QIcon
 def get_base_dir() -> str:
     """取得應用程式根目錄 (跨平台相容開發環境、Windows 打包版及 macOS .app Bundle)"""
     if getattr(sys, 'frozen', False):
-        if hasattr(sys, '_MEIPASS'):
-            return sys._MEIPASS
         exe_dir = os.path.dirname(os.path.abspath(sys.executable))
-        # 若在 macOS .app (Contents/MacOS) 內，資源通常位於 Contents/Resources
+        # 1. macOS .app (Contents/MacOS)：資源位於 Contents/Resources
         if sys.platform == "darwin" and "Contents/MacOS" in exe_dir:
             resources_dir = os.path.abspath(os.path.join(exe_dir, "..", "Resources"))
             if os.path.exists(os.path.join(resources_dir, "assets")):
                 return resources_dir
+            return exe_dir
+
+        # 2. Windows / Linux onedir 打包：assets 與 config 位於 exe 旁邊
+        if os.path.exists(os.path.join(exe_dir, "assets")):
+            return exe_dir
+
+        # 3. 若為 onefile 打包，PyInstaller 會解壓至 sys._MEIPASS
+        if hasattr(sys, '_MEIPASS') and os.path.exists(os.path.join(sys._MEIPASS, "assets")):
+            return sys._MEIPASS
+
         return exe_dir
     return os.path.dirname(os.path.abspath(__file__))
 
