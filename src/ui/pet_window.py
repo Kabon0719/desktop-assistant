@@ -34,6 +34,9 @@ class PetWindow(QWidget):
         flags = Qt.WindowType.FramelessWindowHint
         if sys.platform != "darwin":
             flags |= Qt.WindowType.SubWindow
+        else:
+            flags |= Qt.WindowType.NoDropShadowWindowHint
+            
         if stay_on_top:
             flags |= Qt.WindowType.WindowStaysOnTopHint
         self.setWindowFlags(flags)
@@ -190,8 +193,8 @@ class PetWindow(QWidget):
 
     def paintEvent(self, event: QPaintEvent):
         painter = QPainter(self)
-        painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_Clear)
-        painter.eraseRect(self.rect())
+        painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_Source)
+        painter.fillRect(event.rect(), Qt.GlobalColor.transparent)
         painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_SourceOver)
 
         if not self.current_pixmap.isNull():

@@ -16,7 +16,7 @@
     ]
   },
   "pomodoro": {
-    "duration_minutes": 120,
+    "duration_minutes": 20,
     "sound_file": "",
     "alarm_message": "時間到囉，該是起來動動了！"
   },

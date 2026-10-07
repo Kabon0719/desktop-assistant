@@ -11,8 +11,8 @@
     "fps": 30,
     "stay_on_top": true,
     "saved_position": [
-      3026,
-      425
+      3025,
+      418
     ]
   },
   "behavior": {
@@ -23,7 +23,7 @@
     "return_duration_ms": 450
   },
   "pomodoro": {
-    "duration_minutes": 120,
+    "duration_minutes": 20,
     "sound_file": "",
     "alarm_message": "時間到囉，該是起來動動了！"
   },

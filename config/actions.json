@@ -3,7 +3,7 @@
   "actions": [
     {
       "id": "pomodoro",
-      "label": "🍅 開始番茄鐘 (120分鐘)",
+      "label": "🍅 開始番茄鐘 (20分鐘)",
       "action_type": "pomodoro",
       "target": null,
       "trigger_animation": "act_punch"
