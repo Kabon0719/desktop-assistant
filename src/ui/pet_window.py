@@ -162,6 +162,7 @@ class PetWindow(QWidget):
 
     def start(self):
         self.show()
+        setup_app_window(self)
         self.state_machine.start()
 
         # 置頂守護：定期把自己拉回最上層，防止被其他置頂視窗或系統 UI 擠到後面

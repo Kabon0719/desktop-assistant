@@ -74,12 +74,6 @@ class SpritePlayer(QObject):
         if self.current_anim == anim_name and self.is_loop and self.timer.isActive():
             return
 
-        # 狀態轉換時先派發一幀全透明空白畫布，徹底清空殘留影像緩衝
-        if self.current_anim != anim_name:
-            blank = QPixmap(frames[0].size())
-            blank.fill(Qt.GlobalColor.transparent)
-            self.frame_changed.emit(blank)
-
         self.current_anim = anim_name
         self.frames = frames
         self.current_index = 0
@@ -96,12 +90,6 @@ class SpritePlayer(QObject):
             if callback:
                 callback()
             return
-
-        # 狀態轉換時先派發一幀全透明空白畫布，徹底清空殘留影像緩衝
-        if self.current_anim != anim_name:
-            blank = QPixmap(frames[0].size())
-            blank.fill(Qt.GlobalColor.transparent)
-            self.frame_changed.emit(blank)
 
         self.current_anim = anim_name
         self.frames = frames
