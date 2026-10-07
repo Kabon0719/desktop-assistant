@@ -52,11 +52,11 @@ jobs:
           path: dist/DesktopAssistant-Windows.zip
 
   # ==========================================
-  # 2. macOS 打包任務 (雲端原生 Mac 環境)
+  # 2. macOS 打包任務 (Intel x86_64 與通用相容性)
   # ==========================================
   build-macos:
     name: Build macOS (.app)
-    runs-on: macos-latest
+    runs-on: macos-13
 
     steps:
       - name: Checkout Code
