@@ -145,52 +145,23 @@ class MacOSPlatform(PlatformAdapter):
     def setup_app_window(self, widget) -> None:
         """
         在 macOS 上配置視窗屬性。
-        透過 ctypes 直接呼叫 macOS Cocoa 原生 API：
-        1. 徹底關閉 NSWindow 的系統投影 setHasShadow(NO)，根除拖曳、換動作、縮放時 macOS 系統產生的半透明殘影！
-        2. 配置視窗跨虛擬桌面 (Spaces) 與置頂層級。
+        優先嘗試安全載入 PyObjC (若使用者有安裝)，否則退回使用純 Qt 機制，避免 ctypes 在不同 CPU 架構下發生 Segmentation Fault。
         """
         try:
-            import ctypes
-            import ctypes.util
-            
-            # 載入 macOS 系統內建的 libobjc 運行庫 (無需額外 pip 安裝 pyobjc)
-            objc_lib_path = ctypes.util.find_library('objc') or '/usr/lib/libobjc.A.dylib'
-            libobjc = ctypes.cdll.LoadLibrary(objc_lib_path)
-            
-            # 設定 objc_msgSend 呼叫原型
-            objc_msgSend = libobjc.objc_msgSend
-            objc_msgSend.restype = ctypes.c_void_p
-            objc_msgSend.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
-            
-            sel_window = libobjc.sel_registerName(b"window")
-            sel_setHasShadow = libobjc.sel_registerName(b"setHasShadow:")
-            sel_invalidateShadow = libobjc.sel_registerName(b"invalidateShadow")
-            sel_setCollectionBehavior = libobjc.sel_registerName(b"setCollectionBehavior:")
-            sel_setLevel = libobjc.sel_registerName(b"setLevel:")
-            
-            # 從 QWidget 的 winId() 獲取 NSView 指針
+            import objc
+            from ctypes import c_void_p
             ns_view_ptr = int(widget.winId())
             if ns_view_ptr:
-                ns_window_ptr = objc_msgSend(ctypes.c_void_p(ns_view_ptr), sel_window)
-                if ns_window_ptr:
-                    # 1. 關鍵：徹底關閉 macOS 系統自動為透明無邊框視窗附加的模糊殘影 (setHasShadow: NO)
-                    set_shadow_func = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_bool)(libobjc.objc_msgSend)
-                    set_shadow_func(ctypes.c_void_p(ns_window_ptr), sel_setHasShadow, False)
-                    
-                    # 立即無效化現存陰影緩存
-                    objc_msgSend(ctypes.c_void_p(ns_window_ptr), sel_invalidateShadow)
-                    
-                    # 2. 設置跨 Spaces 桌面顯示 (NSWindowCollectionBehaviorCanJoinAllSpaces | Stationary)
-                    set_beh_func = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_ulong)(libobjc.objc_msgSend)
-                    set_beh_func(ctypes.c_void_p(ns_window_ptr), sel_setCollectionBehavior, (1 << 0) | (1 << 4))
-                    
-                    # 3. 設置浮動置頂層級 (NSFloatingWindowLevel = 3)
-                    set_lvl_func = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_long)(libobjc.objc_msgSend)
-                    set_lvl_func(ctypes.c_void_p(ns_window_ptr), sel_setLevel, 3)
-                    
-                    print("[MacOSPlatform] 已成功關閉 macOS 系統原生視窗陰影 (setHasShadow: NO)")
-        except Exception as e:
-            print(f"[MacOSPlatform] setup_app_window 警告: {e}")
+                ns_view = objc.objc_object(c_void_p=c_void_p(ns_view_ptr))
+                ns_window = ns_view.window()
+                if ns_window:
+                    ns_window.setHasShadow_(False)
+                    ns_window.invalidateShadow()
+                    ns_window.setCollectionBehavior_((1 << 0) | (1 << 4))
+                    ns_window.setLevel_(3)
+                    print("[MacOSPlatform] 已透過 PyObjC 關閉 macOS 系統原生視窗陰影 (setHasShadow: NO)")
+        except Exception:
+            pass
 
     def get_config_dir(self, base_dir: str) -> str:
         """
