@@ -24,3 +24,7 @@ desktop.ini
 # Logs & temp
 *.log
 *.tmp
+
+# Private / Paid assets (付費/私有素材，不公開推送)
+assets/animations/76*
+assets/setting/76.json

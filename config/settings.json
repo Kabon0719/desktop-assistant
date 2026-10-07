@@ -1,12 +1,12 @@
 {
   "window": {
     "idle_size": [
-      380,
-      380
+      360,
+      360
     ],
     "focus_size": [
-      680,
-      680
+      530,
+      530
     ],
     "fps": 30,
     "stay_on_top": true,
@@ -29,15 +29,14 @@
   },
   "animation_groups": {
     "idle": [
-      "76_run",
-      "76_train",
-      "76_kick"
+      "OZ_read",
+      "OZ_switch"
     ],
     "asking": [
-      "76_wait"
+      "OZ_breath"
     ],
     "executing": [
-      "76_cum"
+      "OZ_punch"
     ]
   },
   "language": "zh"
