@@ -18,8 +18,11 @@ class DialogueWidget(QWidget):
         flags = Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint
         if sys.platform != "darwin":
             flags |= Qt.WindowType.SubWindow
+        else:
+            flags |= Qt.WindowType.WindowDoesNotAcceptFocus
         self.setWindowFlags(flags)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
         self.setFixedWidth(310)
 
         # Main container with styling

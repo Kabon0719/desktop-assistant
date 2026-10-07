@@ -42,6 +42,17 @@ def main():
     app = QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
 
+    # macOS 特有：將 App 設定為「附屬應用程式」(Accessory/LSUIElement)
+    # 這能從最根本的作業系統層級，阻止此程式顯示任何視窗時搶走使用者的鍵盤焦點
+    if sys.platform == "darwin":
+        try:
+            import objc
+            NSApp = objc.lookUpClass('NSApplication').sharedApplication()
+            # 1 == NSApplicationActivationPolicyAccessory
+            NSApp.setActivationPolicy_(1)
+        except Exception as e:
+            print(f"[Mac] Set activation policy failed: {e}")
+
     # 跨平台載入應用程式圖示 (macOS/Linux 優先 PNG，Windows 支援 ICO)
     for icon_name in ("app_icon.png", "app_icon.ico"):
         icon_path = os.path.join(BASE_DIR, "assets", icon_name)

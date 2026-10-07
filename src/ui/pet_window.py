@@ -42,6 +42,7 @@ class PetWindow(QWidget):
             flags |= Qt.WindowType.WindowStaysOnTopHint
         self.setWindowFlags(flags)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
         setup_app_window(self)
         self.setWindowTitle(I18n.t("app_name"))
         self.setToolTip(I18n.t("tooltip_idle"))
