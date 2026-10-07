@@ -25,75 +25,81 @@ class DialogueWidget(QWidget):
         # Main container with styling
         self.container = QFrame(self)
         self.container.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
-        self.container.setObjectName("dialogueContainer")
-        self.container.setStyleSheet("""
-            QFrame#dialogueContainer {
+        # macOS 下按鈕預設自帶 Cocoa 邊界可能導致視覺重疊，額外加入垂直 margin；Windows 則保持完全不加 margin 的經典簡潔佈局
+        btn_margin = "margin: 3px 0px;" if sys.platform == "darwin" else ""
+
+        self.container.setStyleSheet(f"""
+            QFrame#dialogueContainer {{
                 background-color: rgba(28, 28, 32, 235);
                 border: 2px solid #d4af37;
                 border-radius: 14px;
-            }
-            QLabel#promptLabel {
+            }}
+            QLabel#promptLabel {{
                 color: #f7e7b4;
                 font-size: 14px;
                 font-weight: bold;
                 padding: 4px 2px;
-            }
-            QPushButton.actionBtn, QPushButton[class="actionBtn"] {
+            }}
+            QPushButton.actionBtn, QPushButton[class="actionBtn"] {{
                 background-color: rgba(55, 48, 42, 210);
                 color: #ffffff;
                 border: 1px solid #8e6c32;
                 border-radius: 8px;
                 padding: 6px 12px;
+                {btn_margin}
                 font-size: 13px;
                 text-align: left;
-            }
-            QPushButton.actionBtn:hover, QPushButton[class="actionBtn"]:hover {
+            }}
+            QPushButton.actionBtn:hover, QPushButton[class="actionBtn"]:hover {{
                 background-color: #d4af37;
                 color: #1a1a1a;
                 font-weight: bold;
-            }
-            QPushButton.addBtn, QPushButton[class="addBtn"] {
+            }}
+            QPushButton.addBtn, QPushButton[class="addBtn"] {{
                 background-color: rgba(35, 60, 42, 220);
                 color: #bbf7d0;
                 border: 1px solid #4ade80;
                 border-radius: 8px;
                 padding: 6px 12px;
+                {btn_margin}
                 font-size: 13px;
                 text-align: left;
                 font-weight: bold;
-            }
-            QPushButton.addBtn:hover, QPushButton[class="addBtn"]:hover {
+            }}
+            QPushButton.addBtn:hover, QPushButton[class="addBtn"]:hover {{
                 background-color: #22c55e;
                 color: #052e16;
-            }
-            QPushButton.pomodoroBtn, QPushButton[class="pomodoroBtn"] {
+            }}
+            QPushButton.pomodoroBtn, QPushButton[class="pomodoroBtn"] {{
                 background-color: rgba(85, 35, 30, 220);
                 color: #fecaca;
                 border: 1px solid #f87171;
                 border-radius: 8px;
                 padding: 6px 12px;
+                {btn_margin}
                 font-size: 13px;
                 text-align: left;
                 font-weight: 500;
-            }
-            QPushButton.pomodoroBtn:hover, QPushButton[class="pomodoroBtn"]:hover {
+            }}
+            QPushButton.pomodoroBtn:hover, QPushButton[class="pomodoroBtn"]:hover {{
                 background-color: #dc2626;
                 color: #ffffff;
                 font-weight: bold;
-            }
-            QPushButton.dismissBtn, QPushButton[class="dismissBtn"] {
+            }}
+            QPushButton.dismissBtn, QPushButton[class="dismissBtn"] {{
                 background-color: rgba(45, 45, 50, 180);
                 color: #9ca3af;
                 border: 1px dashed #6b7280;
                 border-radius: 8px;
                 padding: 5px 12px;
+                {btn_margin}
                 font-size: 12px;
                 text-align: center;
-            }
-            QPushButton.dismissBtn:hover, QPushButton[class="dismissBtn"]:hover {
+            }}
+            QPushButton.dismissBtn:hover, QPushButton[class="dismissBtn"]:hover {{
                 background-color: #4b5563;
                 color: #ffffff;
-            }
+            }}
         """)
 
         # Shadow effect
@@ -119,7 +125,11 @@ class DialogueWidget(QWidget):
 
         # Grid Layout for action buttons (no scrollbar, dynamic sizing)
         self.grid_layout = QGridLayout()
-        self.grid_layout.setSpacing(5)
+        # Windows 保持 5px 緊湊間距，macOS 則加大間距防止按鈕緊貼重疊
+        if sys.platform == "darwin":
+            self.grid_layout.setSpacing(10)
+        else:
+            self.grid_layout.setSpacing(5)
         self.grid_layout.setContentsMargins(0, 0, 0, 0)
         self.box_layout.addLayout(self.grid_layout)
 
