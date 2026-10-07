@@ -30,7 +30,9 @@ class PetWindow(QWidget):
         I18n.set_language(self.language)
         stay_on_top = win_conf.get("stay_on_top", True)
 
-        flags = Qt.WindowType.FramelessWindowHint | Qt.WindowType.SubWindow
+        flags = Qt.WindowType.FramelessWindowHint
+        if sys.platform != "darwin":
+            flags |= Qt.WindowType.SubWindow
         if stay_on_top:
             flags |= Qt.WindowType.WindowStaysOnTopHint
         self.setWindowFlags(flags)
@@ -694,11 +696,12 @@ class PetWindow(QWidget):
         )
         try:
             self.dialogue.winId()  # 強制生成系統原生視窗 handle
-            self.dialogue.setWindowOpacity(0.0)
-            self.dialogue.show()
-            QApplication.processEvents()
-            self.dialogue.hide()
-            self.dialogue.setWindowOpacity(1.0)
+            if sys.platform != "darwin":
+                self.dialogue.setWindowOpacity(0.0)
+                self.dialogue.show()
+                QApplication.processEvents()
+                self.dialogue.hide()
+                self.dialogue.setWindowOpacity(1.0)
         except Exception as e:
             print(f"[PetWindow] Dialogue prewarm note: {e}")
 

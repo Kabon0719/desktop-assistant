@@ -1,4 +1,5 @@
 import re
+import sys
 from typing import List, Dict
 from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QGridLayout, QLabel, QPushButton,
@@ -14,11 +15,10 @@ class DialogueWidget(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowFlags(
-            Qt.WindowType.FramelessWindowHint |
-            Qt.WindowType.WindowStaysOnTopHint |
-            Qt.WindowType.SubWindow
-        )
+        flags = Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint
+        if sys.platform != "darwin":
+            flags |= Qt.WindowType.SubWindow
+        self.setWindowFlags(flags)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.setFixedWidth(310)
 
