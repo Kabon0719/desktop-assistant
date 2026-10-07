@@ -175,7 +175,9 @@ class PetWindow(QWidget):
         self._topmost_timer = QTimer(self)
         self._topmost_timer.timeout.connect(self._ensure_topmost)
         if self._stay_on_top:
-            self._topmost_timer.start(1500)
+            # macOS 的 NSFloatingWindowLevel 非常穩定，不需要透過 Timer 暴力置頂（暴力置頂會導致搶奪焦點）
+            if sys.platform != "darwin":
+                self._topmost_timer.start(1500)
             self._ensure_topmost()
 
     def _ensure_topmost(self):
@@ -574,9 +576,7 @@ class PetWindow(QWidget):
             }
         """)
 
-        reset_act = QAction(I18n.t("menu_reset_pos"), self)
-        reset_act.triggered.connect(self._reset_position)
-        menu.addAction(reset_act)
+        # 使用者要求移除「重設位置到右下角」的功能
 
         settings_act = QAction(I18n.t("menu_settings"), self)
         settings_act.triggered.connect(self._open_settings_dialog)

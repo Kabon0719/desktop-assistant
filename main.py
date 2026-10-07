@@ -60,6 +60,38 @@ def main():
             app.setWindowIcon(QIcon(icon_path))
             break
 
+    # 初次啟動語言選擇
+    from src.utils.config_loader import ConfigLoader
+    config_loader = ConfigLoader(BASE_DIR)
+    settings = config_loader.load_settings()
+    
+    if "language" not in settings:
+        from PyQt6.QtWidgets import QMessageBox, QPushButton
+        msg = QMessageBox()
+        msg.setWindowTitle("Language Selection / 語言選擇")
+        msg.setText("Please select your preferred language:\n請選擇您偏好的介面語言：")
+        
+        btn_zh = msg.addButton("繁體中文", QMessageBox.ButtonRole.AcceptRole)
+        btn_en = msg.addButton("English", QMessageBox.ButtonRole.AcceptRole)
+        
+        # macOS 確保對話框可以在前景顯示
+        if sys.platform == "darwin":
+            try:
+                import objc
+                NSApp = objc.lookUpClass('NSApplication').sharedApplication()
+                NSApp.activateIgnoringOtherApps_(True)
+            except Exception:
+                pass
+                
+        msg.exec()
+        
+        if msg.clickedButton() == btn_en:
+            settings["language"] = "en"
+        else:
+            settings["language"] = "zh"
+            
+        config_loader.save_settings(settings)
+
     window = PetWindow(base_dir=BASE_DIR)
     window.start()
 
