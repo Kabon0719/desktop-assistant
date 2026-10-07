@@ -24,6 +24,7 @@ class DialogueWidget(QWidget):
 
         # Main container with styling
         self.container = QFrame(self)
+        self.container.setObjectName("dialogueContainer")
         self.container.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
         # macOS 下按鈕預設自帶 Cocoa 邊界可能導致視覺重疊，額外加入垂直 margin；Windows 則保持完全不加 margin 的經典簡潔佈局
         btn_margin = "margin: 3px 0px;" if sys.platform == "darwin" else ""
