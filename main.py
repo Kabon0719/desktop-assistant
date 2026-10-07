@@ -42,17 +42,6 @@ def main():
     app = QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
 
-    # macOS 特有：將 App 設定為「附屬應用程式」(Accessory/LSUIElement)
-    # 這能從最根本的作業系統層級，阻止此程式顯示任何視窗時搶走使用者的鍵盤焦點
-    if sys.platform == "darwin":
-        try:
-            import objc
-            NSApp = objc.lookUpClass('NSApplication').sharedApplication()
-            # 1 == NSApplicationActivationPolicyAccessory
-            NSApp.setActivationPolicy_(1)
-        except Exception as e:
-            print(f"[Mac] Set activation policy failed: {e}")
-
     # 跨平台載入應用程式圖示 (macOS/Linux 優先 PNG，Windows 支援 ICO)
     for icon_name in ("app_icon.png", "app_icon.ico"):
         icon_path = os.path.join(BASE_DIR, "assets", icon_name)
@@ -65,16 +54,47 @@ def main():
     config_loader = ConfigLoader(BASE_DIR)
     settings = config_loader.load_settings()
     
-    if "language" not in settings:
-        from PyQt6.QtWidgets import QMessageBox, QPushButton
-        msg = QMessageBox()
-        msg.setWindowTitle("Language Selection / 語言選擇")
-        msg.setText("Please select your preferred language:\n請選擇您偏好的介面語言：")
+    if not settings.get("language"):
+        from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QHBoxLayout
+        dialog = QDialog()
+        dialog.setWindowTitle("Language Selection / 語言選擇")
+        dialog.setFixedWidth(340)
         
-        btn_zh = msg.addButton("繁體中文", QMessageBox.ButtonRole.AcceptRole)
-        btn_en = msg.addButton("English", QMessageBox.ButtonRole.AcceptRole)
+        layout = QVBoxLayout(dialog)
+        layout.setSpacing(16)
+        layout.setContentsMargins(20, 20, 20, 20)
         
-        # macOS 確保對話框可以在前景顯示
+        label = QLabel("Please select your preferred language:\n請選擇您偏好的介面語言：", dialog)
+        label.setStyleSheet("font-size: 14px; font-weight: bold; line-height: 1.4;")
+        layout.addWidget(label)
+        
+        btn_layout = QHBoxLayout()
+        btn_layout.setSpacing(12)
+        
+        btn_zh = QPushButton("繁體中文", dialog)
+        btn_zh.setFixedHeight(36)
+        btn_zh.setStyleSheet("font-size: 13px; font-weight: bold; padding: 6px 12px;")
+        
+        btn_en = QPushButton("English", dialog)
+        btn_en.setFixedHeight(36)
+        btn_en.setStyleSheet("font-size: 13px; font-weight: bold; padding: 6px 12px;")
+        
+        btn_layout.addWidget(btn_zh)
+        btn_layout.addWidget(btn_en)
+        layout.addLayout(btn_layout)
+        
+        selected_lang = ["zh"]
+        def on_zh():
+            selected_lang[0] = "zh"
+            dialog.accept()
+        def on_en():
+            selected_lang[0] = "en"
+            dialog.accept()
+            
+        btn_zh.clicked.connect(on_zh)
+        btn_en.clicked.connect(on_en)
+        
+        # macOS 確保視窗跳到最前景
         if sys.platform == "darwin":
             try:
                 import objc
@@ -82,15 +102,22 @@ def main():
                 NSApp.activateIgnoringOtherApps_(True)
             except Exception:
                 pass
-                
-        msg.exec()
-        
-        if msg.clickedButton() == btn_en:
-            settings["language"] = "en"
-        else:
-            settings["language"] = "zh"
+            dialog.raise_()
+            dialog.activateWindow()
             
+        dialog.exec()
+        settings["language"] = selected_lang[0]
         config_loader.save_settings(settings)
+
+    # macOS 特有：進入主程式後將 App 設定為「附屬應用程式」(Accessory/LSUIElement)，確保後續懸浮絕不搶焦點
+    if sys.platform == "darwin":
+        try:
+            import objc
+            NSApp = objc.lookUpClass('NSApplication').sharedApplication()
+            # 1 == NSApplicationActivationPolicyAccessory
+            NSApp.setActivationPolicy_(1)
+        except Exception as e:
+            print(f"[Mac] Set activation policy failed: {e}")
 
     window = PetWindow(base_dir=BASE_DIR)
     window.start()
